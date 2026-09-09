@@ -20,58 +20,53 @@ const visionPillars = [
 
 const VisionCom: React.FC = () => {
     return (
-        <section className="w-full bg-gray-50 text-gray-900 py-24 lg:py-32 relative overflow-hidden">
+        <section className="w-full bg-gray-50 text-gray-900 py-16 lg:py-24 relative overflow-hidden">
             {/* Extremely Subtle Background Texture */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-0 right-0 w-[40%] h-[60%] bg-gradient-to-bl from-[#0437cc]/5 to-transparent rounded-bl-full"></div>
-                <div className="absolute bottom-0 left-0 w-[40%] h-[60%] bg-gradient-to-tr from-[#f77704]/5 to-transparent rounded-tr-full"></div>
+                <div className="absolute top-0 right-0 w-[40%] h-[60%] bg-gradient-to-bl from-[#0437cc]/5 to-transparent rounded-bl-full transform-gpu"></div>
+                <div className="absolute bottom-0 left-0 w-[40%] h-[60%] bg-gradient-to-tr from-[#f77704]/5 to-transparent rounded-tr-full transform-gpu"></div>
             </div>
 
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col items-center">
 
                 {/* --- Clean Vision Statement Area --- */}
                 <div className="flex flex-col items-center text-center max-w-5xl w-full">
-
                     {/* Elegant Quote Icon */}
                     <div className="mb-6 text-[#0437cc]/20">
-                        <svg className="w-12 h-12 lg:w-16 lg:h-16 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-10 h-10 lg:w-14 lg:h-14 mx-auto" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                         </svg>
                     </div>
 
                     {/* Perfectly Typeset Statement */}
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.3] text-gray-900">
+                    <h2 className="text-3xl md:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight leading-[1.2] text-gray-900">
                         Empowering businesses to grow without limits through <span className="text-[#0437cc]">ethical</span> and <span className="text-[#f77704]">scalable</span> digital solutions, bridging the gap between innovation and reality.
                     </h2>
                 </div>
 
                 {/* --- Neat, Premium Structured Grid for Pillars --- */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full mt-20 lg:mt-28">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full mt-16 lg:mt-24">
                     {visionPillars.map((pillar, index) => (
                         <div
                             key={index}
-                            className="relative bg-white rounded-3xl p-8 lg:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgba(4,55,204,0.08)] hover:-translate-y-2 transition-all duration-500 group overflow-hidden flex flex-col text-left"
+                            className="relative bg-white rounded-3xl p-8 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgba(4,55,204,0.08)] hover:-translate-y-2 transition-all duration-500 group overflow-hidden flex flex-col text-left transform-gpu"
                         >
-                            {/* Animated Top Accent Line */}
                             <div className="absolute top-0 left-0 w-0 h-1.5 bg-gradient-to-r from-[#0437cc] to-[#18acfa] group-hover:w-full transition-all duration-700 ease-out z-20"></div>
 
-                            {/* Massive Faint Background Watermark Number */}
-                            <div className="absolute -bottom-10 -right-6 text-[140px] font-black text-gray-50 group-hover:text-gray-100/60 group-hover:scale-110 transition-all duration-700 pointer-events-none select-none z-0">
+                            <div className="absolute -bottom-10 -right-6 text-[120px] font-black text-gray-50 group-hover:text-gray-100/60 group-hover:scale-110 transition-all duration-700 pointer-events-none select-none z-0">
                                 0{index + 1}
                             </div>
 
-                            {/* Icon Container */}
-                            <div className="w-16 h-16 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-[#0437cc] group-hover:bg-[#0437cc] group-hover:text-white transition-all duration-500 mb-8 relative z-10">
-                                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-[#0437cc] group-hover:bg-[#0437cc] group-hover:text-white transition-all duration-500 mb-6 relative z-10">
+                                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={pillar.icon} />
                                 </svg>
                             </div>
 
-                            {/* Text Content */}
-                            <h3 className="text-2xl font-extrabold text-gray-900 mb-4 group-hover:text-[#0437cc] transition-colors duration-300 relative z-10 tracking-tight">
+                            <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-3 group-hover:text-[#0437cc] transition-colors duration-300 relative z-10 tracking-tight">
                                 {pillar.title}
                             </h3>
-                            <p className="text-gray-500 font-medium leading-relaxed text-base relative z-10">
+                            <p className="text-gray-500 font-medium leading-relaxed text-sm md:text-base relative z-10">
                                 {pillar.desc}
                             </p>
                         </div>

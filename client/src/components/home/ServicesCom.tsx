@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Buttons from '../../common/Buttons';
@@ -63,19 +64,20 @@ const ServicesCom: React.FC = () => {
 
     return (
         // z-10 ensures this section stays behind Presence.tsx during the parallax transition
-        <section ref={sectionRef} className="w-full bg-gray-50 text-gray-900 py-12 lg:py-20 relative overflow-hidden flex flex-col justify-center min-h-screen z-10">
+        // Added id="services" for smooth scrolling anchor target
+        <section id="services" ref={sectionRef} className="w-full bg-gray-50 text-gray-900 py-12 lg:py-20 relative overflow-hidden flex flex-col justify-center min-h-screen z-10">
 
             {/* Zero-Lag Radial Gradient Backgrounds */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#f77704]/5 to-transparent"></div>
-                <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#0437cc]/5 to-transparent"></div>
+                <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#f77704]/5 to-transparent transform-gpu"></div>
+                <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#0437cc]/5 to-transparent transform-gpu"></div>
             </div>
 
             <div ref={headerRef} className="text-center max-w-5xl mx-auto mb-6 px-6 relative z-10 w-full shrink-0">
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-4 text-gray-900">
                     Our Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0437cc] to-[#18acfa]">Services</span>
                 </h2>
-                <p className="text-base md:text-xl font-medium leading-relaxed text-gray-600 max-w-4xl mx-auto">
+                <p className="text-base md:text-lg lg:text-xl font-medium leading-relaxed text-gray-600 max-w-4xl mx-auto">
                     We offer end-to-end technology solutions across emerging and established industries, ensuring your business stays ahead in a digital world.
                 </p>
             </div>
@@ -117,14 +119,18 @@ const ServicesCom: React.FC = () => {
                             </ul>
 
                             <div className="mt-auto pt-5 lg:pt-6 border-t border-gray-100 flex justify-start shrink-0">
-                                <div className="w-full">
-                                    <Buttons text={service.cta} />
+                                <div className="w-full outline-none">
+                                    {/* Link added here to redirect smoothly to Contact page */}
+                                    <Link to="/contact" className="block w-full outline-none">
+                                        <Buttons text={service.cta} className="w-full" />
+                                    </Link>
                                 </div>
                             </div>
                         </div>
                     ))}
 
-                    <div className="hidden lg:block w-12 flex-shrink-0"></div>
+                    {/* Spacer to allow the final card to scroll fully into view on 1080p screens */}
+                    <div className="hidden lg:block w-24 xl:w-32 flex-shrink-0"></div>
                 </div>
             </div>
         </section>

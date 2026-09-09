@@ -4,12 +4,10 @@ import { Link } from 'react-router-dom';
 const TermsOfService: React.FC = () => {
     const [activeSection, setActiveSection] = useState('overview');
 
-    // Scroll to top on load
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    // Intersection Observer to highlight the active section in the sticky sidebar
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -19,7 +17,7 @@ const TermsOfService: React.FC = () => {
                     }
                 });
             },
-            { rootMargin: '-20% 0px -70% 0px' } // Adjusts when the section triggers as "active"
+            { rootMargin: '-20% 0px -70% 0px' }
         );
 
         const sections = document.querySelectorAll('section[id]');
@@ -28,11 +26,10 @@ const TermsOfService: React.FC = () => {
         return () => observer.disconnect();
     }, []);
 
-    // Smooth scroll handler for sidebar clicks
     const scrollToSection = (id: string) => {
         const element = document.getElementById(id);
         if (element) {
-            const offset = 100; // Account for sticky spacing
+            const offset = 96; // Adjusted to match top-24 on the sidebar
             const bodyRect = document.body.getBoundingClientRect().top;
             const elementRect = element.getBoundingClientRect().top;
             const elementPosition = elementRect - bodyRect;
@@ -58,8 +55,8 @@ const TermsOfService: React.FC = () => {
     return (
         <div className="w-full min-h-screen bg-gray-50 flex flex-col">
 
-            {/* --- Premium Dark Hero Section --- */}
-            <section className="relative w-full bg-[#010a1f] pt-20 pb-24 lg:pb-32 px-6 lg:px-8 overflow-hidden">
+            {/* --- Premium Dark Hero Section (Optimized for 1080p Laptops) --- */}
+            <section className="relative w-full bg-[#010a1f] pt-16 md:pt-20 lg:pt-24 pb-12 lg:pb-16 px-6 lg:px-8 overflow-hidden">
                 <style>
                     {`
                         @keyframes text-shine {
@@ -69,27 +66,25 @@ const TermsOfService: React.FC = () => {
                     `}
                 </style>
                 
-                {/* Static Background Glows for zero-lag performance */}
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#0437cc]/25 to-transparent pointer-events-none transform-gpu"></div>
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#f77704]/15 to-transparent pointer-events-none transform-gpu"></div>
 
                 <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center">
-                    <div className="mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[#a6e71c] text-xs font-bold tracking-widest uppercase inline-flex items-center gap-2 shadow-sm backdrop-blur-md">
+                    <div className="mb-4 lg:mb-6 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-[#a6e71c] text-xs font-bold tracking-widest uppercase inline-flex items-center gap-2 shadow-sm backdrop-blur-md">
                         <span className="w-2 h-2 rounded-full bg-[#a6e71c]"></span>
                         Legal Information
                     </div>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-4 lg:mb-6 leading-tight">
                         Terms of <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#18acfa] via-[#a6e71c] to-[#18acfa] bg-[length:200%_auto] animate-[text-shine_5s_linear_infinite]">
                             Service.
                         </span>
                     </h1>
-                    <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-gray-400 text-base md:text-lg lg:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
                         By accessing the website and digital services of AGILAVETRI PRIMETECH PRIVATE LIMITED, you agree to comply with our global service terms.
                     </p>
                 </div>
 
-                {/* Massive Watermark Typography */}
-                <div className="absolute bottom-[-20px] md:bottom-[-40px] left-0 w-full text-center pointer-events-none select-none z-0 overflow-hidden">
+                <div className="absolute bottom-[-10px] md:bottom-[-20px] lg:bottom-[-40px] left-0 w-full text-center pointer-events-none select-none z-0 overflow-hidden">
                     <h1 className="text-[18vw] font-black text-white/[0.02] leading-none whitespace-nowrap tracking-tighter">
                         AGILAVETRI
                     </h1>
@@ -97,11 +92,11 @@ const TermsOfService: React.FC = () => {
             </section>
 
             {/* --- Main Content Split Layout --- */}
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 w-full flex flex-col lg:flex-row gap-12 lg:gap-20">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-16 w-full flex flex-col lg:flex-row gap-10 lg:gap-20">
 
                 {/* --- Left Column: Sticky Sidebar --- */}
                 <div className="w-full lg:w-1/4 shrink-0">
-                    <div className="sticky top-28 bg-white rounded-2xl p-6 lg:p-8 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hidden lg:block z-20">
+                    <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] bg-white rounded-2xl p-6 lg:p-8 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hidden lg:block z-20">
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Table of Contents</h3>
                         <nav className="flex flex-col gap-4">
                             {navItems.map((item) => (
@@ -136,9 +131,9 @@ const TermsOfService: React.FC = () => {
                 </div>
 
                 {/* --- Right Column: Scrollable Content --- */}
-                <div className="w-full lg:w-3/4 flex flex-col gap-12 lg:gap-16 pb-24">
+                <div className="w-full lg:w-3/4 flex flex-col gap-10 lg:gap-16 pb-20 lg:pb-24">
 
-                    <section id="overview" className="scroll-mt-28">
+                    <section id="overview" className="scroll-mt-24">
                         <p className="text-lg md:text-xl text-gray-600 leading-relaxed font-medium">
                             Welcome to AGILAVETRI PRIMETECH PRIVATE LIMITED. These Terms of Service govern your access to and use of our corporate website, consulting services, and digital infrastructure offerings across our global hubs. By engaging with our platforms, you agree to be bound by these foundational terms.
                         </p>
@@ -146,7 +141,7 @@ const TermsOfService: React.FC = () => {
 
                     <div className="w-full h-px bg-gray-200"></div>
 
-                    <section id="ip" className="scroll-mt-28">
+                    <section id="ip" className="scroll-mt-24">
                         <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6">
                             1. Intellectual Property
                         </h2>
@@ -170,7 +165,7 @@ const TermsOfService: React.FC = () => {
                         </p>
                     </section>
 
-                    <section id="delivery" className="scroll-mt-28">
+                    <section id="delivery" className="scroll-mt-24">
                         <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6">
                             2. Service Delivery & SLAs
                         </h2>
@@ -191,7 +186,7 @@ const TermsOfService: React.FC = () => {
                         </ul>
                     </section>
 
-                    <section id="liability" className="scroll-mt-28">
+                    <section id="liability" className="scroll-mt-24">
                         <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6">
                             3. Limitation of Liability
                         </h2>
@@ -200,7 +195,7 @@ const TermsOfService: React.FC = () => {
                         </p>
                     </section>
 
-                    <section id="jurisdiction" className="scroll-mt-28">
+                    <section id="jurisdiction" className="scroll-mt-24">
                         <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6">
                             4. Governing Law & Jurisdiction
                         </h2>
@@ -209,9 +204,8 @@ const TermsOfService: React.FC = () => {
                         </p>
                     </section>
 
-                    <section id="contact" className="scroll-mt-28">
+                    <section id="contact" className="scroll-mt-24">
                         <div className="bg-[#010a1f] rounded-[2rem] p-8 md:p-12 relative overflow-hidden text-white shadow-xl">
-                            {/* Inner Glow */}
                             <div className="absolute top-0 right-0 w-64 h-64 bg-[#0437cc] rounded-full mix-blend-screen filter blur-[100px] opacity-40 pointer-events-none"></div>
 
                             <h2 className="text-2xl md:text-3xl font-extrabold mb-4 relative z-10">
