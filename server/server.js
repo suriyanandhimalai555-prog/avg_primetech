@@ -33,21 +33,36 @@ app.use(cors({
 
 app.use(express.json());
 
-// Configure Nodemailer Transporter
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+// --- DYNAMIC NODEMAILER CONFIGURATION ---
+// Automatically switches between Hostinger (Production) and Gmail (Local)
+const transporterConfig = process.env.SMTP_HOST
+    ? {
+        // Hostinger / Custom Domain Setup
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT || 465,
+        secure: true, // true for port 465, false for 587
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
     }
-});
+    : {
+        // Gmail Local Development Fallback
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    };
+
+const transporter = nodemailer.createTransport(transporterConfig);
 
 // Verify email connection on startup
 transporter.verify((error, success) => {
     if (error) {
         console.error("⚠️ SMTP Connection Error:", error);
     } else {
-        console.log("✅ Mail server is ready to send messages");
+        console.log(`✅ Mail server is ready to send messages using ${process.env.SMTP_HOST ? 'Hostinger/Custom SMTP' : 'Gmail'}`);
     }
 });
 
@@ -60,7 +75,8 @@ app.post('/api/contact', async (req, res) => {
 
     // HTML Email Template using AGILAVETRI Brand Colors and DM Sans Font
     const mailOptions = {
-        from: `"${name}" <${email}>`,
+        from: `"${name}" <${process.env.EMAIL_USER}>`, // Best practice: Always send *from* the authenticated email
+        replyTo: email, // If you click "reply" in your inbox, it goes to the customer
         to: process.env.EMAIL_USER, // The inbox receiving the leads
         subject: `New Inquiry from ${name} - ${service}`,
         html: `
@@ -144,4 +160,4 @@ server.on('error', (e) => {
     } else {
         console.error("Server Error:", e);
     }
-});
+}); 

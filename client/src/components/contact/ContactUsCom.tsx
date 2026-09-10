@@ -79,8 +79,8 @@ const ContactUsCom: React.FC = () => {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
 
-        // Clear global form status as user types
-        if (formStatus.type) {
+        // Clear global error status as user types (do not clear success automatically)
+        if (formStatus.type === 'error') {
             setFormStatus({ type: null, message: '' });
         }
     };
@@ -118,10 +118,9 @@ const ContactUsCom: React.FC = () => {
 
         if (isValid) {
             setIsSubmitting(true);
-            setFormStatus({ type: null, message: '' }); // Reset status before submitting
+            setFormStatus({ type: null, message: '' });
 
             try {
-                // Ensure no trailing slashes in API URL
                 const baseUrl = API_BASE_URL.replace(/\/$/, '');
                 const response = await fetch(`${baseUrl}/api/contact`, {
                     method: 'POST',
@@ -132,17 +131,19 @@ const ContactUsCom: React.FC = () => {
                 });
 
                 if (response.ok) {
+                    // Trigger Full Cover Success Screen
                     setFormStatus({
                         type: 'success',
-                        message: 'Thank you! Your inquiry has been sent successfully. Our team will contact you shortly.'
+                        message: 'Your inquiry has been successfully sent. Our technical architects will contact you shortly.'
                     });
-                    // Reset form after success
+
+                    // Reset form fields
                     setFormData({ name: '', email: '', service: 'General Digital Consulting', message: '' });
 
-                    // Auto-hide the success message after 7 seconds
+                    // Auto-hide the success cover screen after 6 seconds
                     setTimeout(() => {
                         setFormStatus({ type: null, message: '' });
-                    }, 7000);
+                    }, 6000);
 
                 } else {
                     setFormStatus({
@@ -256,26 +257,49 @@ const ContactUsCom: React.FC = () => {
 
                     {/* --- Right Column: Premium Dark Contact Form --- */}
                     <div className="w-full lg:w-7/12 flex flex-col">
-                        <div className="bg-[#010a1f] h-full rounded-[2rem] p-6 lg:p-10 shadow-[0_30px_80px_rgba(4,55,204,0.15)] border border-white/10 flex flex-col relative overflow-hidden">
+                        <div className="bg-[#010a1f] h-full rounded-[2rem] p-6 lg:p-10 shadow-[0_30px_80px_rgba(4,55,204,0.15)] border border-white/10 flex flex-col relative overflow-hidden min-h-[500px]">
 
-                            {/* --- Custom CSS for Checkmark Animation --- */}
-                            <style>
-                                {`
-                                    @keyframes checkmark-draw {
-                                        0% { stroke-dashoffset: 50; opacity: 0; transform: scale(0.5); }
-                                        100% { stroke-dashoffset: 0; opacity: 1; transform: scale(1); }
-                                    }
-                                    .animate-checkmark-draw {
-                                        stroke-dasharray: 50;
-                                        stroke-dashoffset: 50;
-                                        animation: checkmark-draw 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-                                    }
-                                `}
-                            </style>
+                            {/* --- Custom CSS for Animations (Safely Injected to prevent TS parser errors) --- */}
+                            <style dangerouslySetInnerHTML={{
+                                __html: `
+                                @keyframes checkmark-draw {
+                                    0% { stroke-dashoffset: 50; opacity: 0; transform: scale(0.5); }
+                                    100% { stroke-dashoffset: 0; opacity: 1; transform: scale(1); }
+                                }
+                                .animate-checkmark-draw {
+                                    stroke-dasharray: 50;
+                                    stroke-dashoffset: 50;
+                                    animation: checkmark-draw 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+                                }
+                                @keyframes fade-in {
+                                    0% { opacity: 0; transform: translateY(10px); }
+                                    100% { opacity: 1; transform: translateY(0); }
+                                }
+                                .animate-fade-in {
+                                    animation: fade-in 0.4s ease-out forwards;
+                                }
+                            `}} />
 
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#0437cc] rounded-full mix-blend-screen filter blur-[120px] opacity-40 pointer-events-none transform-gpu"></div>
-                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#f77704] rounded-full mix-blend-screen filter blur-[120px] opacity-20 pointer-events-none transform-gpu"></div>
+                            {/* Ambient Glows */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#0437cc] rounded-full mix-blend-screen filter blur-[120px] opacity-40 pointer-events-none transform-gpu z-0"></div>
+                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#f77704] rounded-full mix-blend-screen filter blur-[120px] opacity-20 pointer-events-none transform-gpu z-0"></div>
 
+                            {/* --- FULL COVER SUCCESS OVERLAY --- */}
+                            {formStatus.type === 'success' && (
+                                <div className="absolute inset-0 z-50 bg-[#010a1f]/95 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center animate-fade-in">
+                                    <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-full bg-[#a6e71c]/10 border border-[#a6e71c]/30 flex items-center justify-center mb-6 lg:mb-8 shadow-[0_0_40px_rgba(166,231,28,0.2)]">
+                                        <svg className="w-12 h-12 lg:w-14 lg:h-14 text-[#a6e71c] animate-checkmark-draw" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-3xl lg:text-4xl font-extrabold text-white mb-4 tracking-tight">Request Received!</h3>
+                                    <p className="text-gray-400 text-sm lg:text-base font-medium leading-relaxed max-w-sm mx-auto">
+                                        {formStatus.message}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* --- NORMAL FORM CONTENT --- */}
                             <div className="mb-6 lg:mb-8 relative z-10">
                                 <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">Send us a Message</h3>
                                 <p className="text-gray-400 text-xs md:text-sm lg:text-base font-medium">
@@ -285,27 +309,13 @@ const ContactUsCom: React.FC = () => {
 
                             <form className="flex flex-col flex-grow gap-5 relative z-10" onSubmit={handleSubmit}>
 
-                                {/* --- INLINE SUCCESS / ERROR NOTIFICATION --- */}
+                                {/* INLINE ERROR NOTIFICATION */}
                                 {formStatus.type === 'error' && (
                                     <div className="p-4 rounded-xl border flex items-start gap-3 transition-all duration-300 bg-red-500/10 border-red-500/30 text-red-400 mb-2">
                                         <div className="shrink-0 mt-0.5">
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                         </div>
                                         <p className="text-sm font-medium leading-relaxed">{formStatus.message}</p>
-                                    </div>
-                                )}
-
-                                {formStatus.type === 'success' && (
-                                    <div className="p-5 md:p-6 rounded-2xl bg-[#a6e71c]/10 border border-[#a6e71c]/30 flex flex-col md:flex-row items-center md:items-start gap-5 transition-all duration-500 mb-2 shadow-[0_0_20px_rgba(166,231,28,0.1)]">
-                                        <div className="w-14 h-14 rounded-full bg-[#a6e71c]/20 flex items-center justify-center shrink-0">
-                                            <svg className="w-7 h-7 text-[#a6e71c] animate-checkmark-draw" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                                <path d="M20 6L9 17l-5-5" />
-                                            </svg>
-                                        </div>
-                                        <div className="text-center md:text-left pt-1">
-                                            <h4 className="text-white font-extrabold text-lg md:text-xl mb-1">Inquiry Submitted!</h4>
-                                            <p className="text-gray-300 font-medium text-sm leading-relaxed">{formStatus.message}</p>
-                                        </div>
                                     </div>
                                 )}
 
