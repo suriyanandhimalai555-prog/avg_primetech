@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Buttons from '../../common/Buttons';
 
+// Securely check environment variables, fallback to 5005
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5005';
+
 const locations = [
     {
         city: "Dubai Head Office",
         type: "Headquarters",
         flag: "🇦🇪",
-        address: "Burj Nahar Mall - Room No:8, A4 Block M2 Floor - 23rd St - Al Muteena - Deira - Dubai - UAE",
-        phone: "+971 507078677",
+        address: "Agilavetri information technology LLC, A5 Office, No 8 Xavier Business Center BN Complex M2 Floor, Al Muteena Street, Deira Dubai.",
+        phone: "+971 56 142 4235",
         email: "dubai@agilavetri.com",
         borderColor: "border-[#0437cc]",
         iconColor: "text-[#0437cc]",
@@ -17,7 +20,7 @@ const locations = [
         city: "Bengaluru Hub",
         type: "Tech Hub",
         flag: "🇮🇳",
-        address: "No: 472/7, Balaji Arcade, 1st floor, AVS Compound, 80 Feet Road, 4th Block, Koramanagala, Bengaluru, India",
+        address: "No: 472/7, Balaji Arcade, 1st floor, AVS Compound, 80 Feet Road, 4th Block, Koramanagala, Bengaluru, India.",
         phone: "+91 91871 12123",
         email: "india@agilavetri.com",
         borderColor: "border-[#f77704]",
@@ -47,12 +50,20 @@ const ContactUsCom: React.FC = () => {
         message: ''
     });
 
-    // Validation Error State
+    // Validation & Loading States
     const [errors, setErrors] = useState({
         name: '',
         email: '',
         message: ''
     });
+
+    // Status state for beautiful inline success/error messages
+    const [formStatus, setFormStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({
+        type: null,
+        message: ''
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -63,14 +74,19 @@ const ContactUsCom: React.FC = () => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
 
-        // Clear error as user types
+        // Clear input error as user types
         if (errors[name as keyof typeof errors]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
+
+        // Clear global form status as user types
+        if (formStatus.type) {
+            setFormStatus({ type: null, message: '' });
+        }
     };
 
-    // Form Submission & Validation Logic
-    const handleSubmit = (e: React.FormEvent) => {
+    // Form Submission & API Call
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         let newErrors = { name: '', email: '', message: '' };
@@ -101,19 +117,55 @@ const ContactUsCom: React.FC = () => {
         setErrors(newErrors);
 
         if (isValid) {
-            // Placeholder for your future WhatsApp / Email integration API call
-            console.log("Form is valid. Ready for submission:", formData);
-            alert("Validation successful! (Email/WhatsApp submission logic to be added here)");
+            setIsSubmitting(true);
+            setFormStatus({ type: null, message: '' }); // Reset status before submitting
 
-            // Optional: Clear form upon successful simulated submit
-            // setFormData({ name: '', email: '', service: 'General Digital Consulting', message: '' });
+            try {
+                // Ensure no trailing slashes in API URL
+                const baseUrl = API_BASE_URL.replace(/\/$/, '');
+                const response = await fetch(`${baseUrl}/api/contact`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    setFormStatus({
+                        type: 'success',
+                        message: 'Thank you! Your inquiry has been sent successfully. Our team will contact you shortly.'
+                    });
+                    // Reset form after success
+                    setFormData({ name: '', email: '', service: 'General Digital Consulting', message: '' });
+
+                    // Auto-hide the success message after 7 seconds
+                    setTimeout(() => {
+                        setFormStatus({ type: null, message: '' });
+                    }, 7000);
+
+                } else {
+                    setFormStatus({
+                        type: 'error',
+                        message: 'Failed to send message. Please try again later.'
+                    });
+                }
+            } catch (error) {
+                console.error("Submission Error:", error);
+                setFormStatus({
+                    type: 'error',
+                    message: 'An error occurred. Please check your backend connection and try again.'
+                });
+            } finally {
+                setIsSubmitting(false);
+            }
         }
     };
 
     return (
         <div className="w-full min-h-screen bg-white flex flex-col overflow-hidden">
 
-            {/* --- Premium Dark Hero Section (Optimized for 1080p Laptops) --- */}
+            {/* --- Premium Dark Hero Section --- */}
             <section className="relative w-full bg-[#010a1f] pt-16 md:pt-20 lg:pt-24 pb-12 lg:pb-16 px-6 lg:px-8">
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#0437cc] rounded-full mix-blend-screen filter blur-[150px] opacity-[0.25] pointer-events-none transform-gpu"></div>
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#f77704] rounded-full mix-blend-screen filter blur-[150px] opacity-[0.15] pointer-events-none transform-gpu"></div>
@@ -141,7 +193,7 @@ const ContactUsCom: React.FC = () => {
                 </div>
             </section>
 
-            {/* --- Main Contact Area (Tightened gaps for laptop viewports) --- */}
+            {/* --- Main Contact Area --- */}
             <section className="py-16 lg:py-24 px-6 lg:px-8 bg-white relative z-10">
                 <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10 lg:gap-16 items-stretch">
 
@@ -206,6 +258,21 @@ const ContactUsCom: React.FC = () => {
                     <div className="w-full lg:w-7/12 flex flex-col">
                         <div className="bg-[#010a1f] h-full rounded-[2rem] p-6 lg:p-10 shadow-[0_30px_80px_rgba(4,55,204,0.15)] border border-white/10 flex flex-col relative overflow-hidden">
 
+                            {/* --- Custom CSS for Checkmark Animation --- */}
+                            <style>
+                                {`
+                                    @keyframes checkmark-draw {
+                                        0% { stroke-dashoffset: 50; opacity: 0; transform: scale(0.5); }
+                                        100% { stroke-dashoffset: 0; opacity: 1; transform: scale(1); }
+                                    }
+                                    .animate-checkmark-draw {
+                                        stroke-dasharray: 50;
+                                        stroke-dashoffset: 50;
+                                        animation: checkmark-draw 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+                                    }
+                                `}
+                            </style>
+
                             <div className="absolute top-0 right-0 w-64 h-64 bg-[#0437cc] rounded-full mix-blend-screen filter blur-[120px] opacity-40 pointer-events-none transform-gpu"></div>
                             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#f77704] rounded-full mix-blend-screen filter blur-[120px] opacity-20 pointer-events-none transform-gpu"></div>
 
@@ -217,6 +284,30 @@ const ContactUsCom: React.FC = () => {
                             </div>
 
                             <form className="flex flex-col flex-grow gap-5 relative z-10" onSubmit={handleSubmit}>
+
+                                {/* --- INLINE SUCCESS / ERROR NOTIFICATION --- */}
+                                {formStatus.type === 'error' && (
+                                    <div className="p-4 rounded-xl border flex items-start gap-3 transition-all duration-300 bg-red-500/10 border-red-500/30 text-red-400 mb-2">
+                                        <div className="shrink-0 mt-0.5">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        </div>
+                                        <p className="text-sm font-medium leading-relaxed">{formStatus.message}</p>
+                                    </div>
+                                )}
+
+                                {formStatus.type === 'success' && (
+                                    <div className="p-5 md:p-6 rounded-2xl bg-[#a6e71c]/10 border border-[#a6e71c]/30 flex flex-col md:flex-row items-center md:items-start gap-5 transition-all duration-500 mb-2 shadow-[0_0_20px_rgba(166,231,28,0.1)]">
+                                        <div className="w-14 h-14 rounded-full bg-[#a6e71c]/20 flex items-center justify-center shrink-0">
+                                            <svg className="w-7 h-7 text-[#a6e71c] animate-checkmark-draw" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M20 6L9 17l-5-5" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-center md:text-left pt-1">
+                                            <h4 className="text-white font-extrabold text-lg md:text-xl mb-1">Inquiry Submitted!</h4>
+                                            <p className="text-gray-300 font-medium text-sm leading-relaxed">{formStatus.message}</p>
+                                        </div>
+                                    </div>
+                                )}
 
                                 <div className="flex flex-col md:flex-row gap-5">
                                     <div className="w-full">
@@ -276,9 +367,9 @@ const ContactUsCom: React.FC = () => {
                                     {errors.message && <p className="text-red-500 text-[10px] md:text-xs font-semibold mt-1.5 ml-1">{errors.message}</p>}
                                 </div>
 
-                                <div className="mt-2 w-full flex justify-end shrink-0" onClick={handleSubmit}>
+                                <div className={`mt-2 w-full flex justify-end shrink-0 ${isSubmitting ? 'pointer-events-none opacity-70' : ''}`} onClick={handleSubmit}>
                                     <div className="w-full md:w-auto cursor-pointer">
-                                        <Buttons text="Submit Inquiry" />
+                                        <Buttons text={isSubmitting ? "Sending..." : "Submit Inquiry"} />
                                     </div>
                                 </div>
 
