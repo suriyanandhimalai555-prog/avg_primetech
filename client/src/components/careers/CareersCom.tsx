@@ -1,7 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Buttons from '../../common/Buttons';
 
-const jobOpenings = [
+// Define the type so you get autocomplete when you add jobs later
+type JobOpening = {
+    title: string;
+    department: string;
+    location: string;
+    type: string;
+    desc: string;
+    reqs: string[];
+    colorTheme: string;
+    borderColor: string;
+    bgAccent: string;
+    textColor: string;
+};
+
+// CURRENTLY NO OPENINGS: Array is empty.
+// When you have new jobs, just uncomment the object below and add as many as you need.
+const jobOpenings: JobOpening[] = [
+    /*
     {
         title: "Senior Blockchain Developer",
         department: "Engineering",
@@ -13,55 +30,8 @@ const jobOpenings = [
         borderColor: "border-[#0437cc]",
         bgAccent: "bg-[#0437cc]/10",
         textColor: "text-[#0437cc]"
-    },
-    {
-        title: "Frontend React Engineer",
-        department: "Engineering",
-        location: "Bengaluru Hub",
-        type: "Full-Time",
-        desc: "Build buttery-smooth, zero-lag user interfaces for high-performance enterprise SaaS and FinTech platforms.",
-        reqs: ["3+ years React/TypeScript", "Tailwind CSS", "Performance Optimization"],
-        colorTheme: "blue",
-        borderColor: "border-[#0437cc]",
-        bgAccent: "bg-[#0437cc]/10",
-        textColor: "text-[#0437cc]"
-    },
-    {
-        title: "Digital Marketing Specialist",
-        department: "Growth & Marketing",
-        location: "Dubai HQ / Bengaluru",
-        type: "Full-Time",
-        desc: "Drive global brand visibility, manage performance marketing campaigns, and execute lead generation strategies across GCC and Asian markets.",
-        reqs: ["B2B SaaS Marketing", "SEO & SEM Mastery", "Analytics & Reporting"],
-        colorTheme: "orange",
-        borderColor: "border-[#f77704]",
-        bgAccent: "bg-[#f77704]/10",
-        textColor: "text-[#f77704]"
-    },
-    {
-        title: "SEO Strategist",
-        department: "Growth & Marketing",
-        location: "Remote",
-        type: "Contract",
-        desc: "Lead technical SEO initiatives, content architecture, and organic growth strategies for our global Web3 and enterprise platforms.",
-        reqs: ["Technical SEO", "Ahrefs/SEMrush", "Content Strategy"],
-        colorTheme: "orange",
-        borderColor: "border-[#f77704]",
-        bgAccent: "bg-[#f77704]/10",
-        textColor: "text-[#f77704]"
-    },
-    {
-        title: "International Telecaller / Inside Sales",
-        department: "Sales",
-        location: "Bengaluru Hub",
-        type: "Full-Time",
-        desc: "Spearhead our outbound sales initiatives, connecting with prospective enterprise clients and communicating our high-end technology solutions.",
-        reqs: ["Excellent Communication", "B2B Tech Sales Experience", "CRM Proficiency"],
-        colorTheme: "lime",
-        borderColor: "border-[#a6e71c]",
-        bgAccent: "bg-[#a6e71c]/20",
-        textColor: "text-[#48b608]"
     }
+    */
 ];
 
 const benefits = [
@@ -87,6 +57,7 @@ const CareersCom: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeDepartment, setActiveDepartment] = useState("All Roles");
 
+    const hasOpenings = jobOpenings.length > 0;
     const departments = ["All Roles", ...Array.from(new Set(jobOpenings.map(job => job.department)))];
 
     const filteredJobs = jobOpenings.filter(job => {
@@ -103,6 +74,7 @@ const CareersCom: React.FC = () => {
     return (
         <div className="w-full min-h-screen bg-gray-50 flex flex-col overflow-hidden">
 
+            {/* --- Premium Dark Hero Section --- */}
             <section className="relative w-full bg-[#010a1f] pt-16 md:pt-20 lg:pt-24 pb-12 lg:pb-16 px-6 lg:px-8">
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#0437cc]/25 to-transparent pointer-events-none transform-gpu"></div>
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#f77704]/15 to-transparent pointer-events-none transform-gpu"></div>
@@ -130,6 +102,7 @@ const CareersCom: React.FC = () => {
                 </div>
             </section>
 
+            {/* --- Benefits Section --- */}
             <section className="py-16 lg:py-24 px-6 lg:px-8 bg-white relative z-10 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
@@ -162,6 +135,7 @@ const CareersCom: React.FC = () => {
                 </div>
             </section>
 
+            {/* --- Openings Section --- */}
             <section className="py-16 lg:py-24 px-6 lg:px-8 bg-gray-50 relative z-10">
                 <div className="max-w-5xl mx-auto">
 
@@ -171,7 +145,9 @@ const CareersCom: React.FC = () => {
                                 Current Openings
                             </h2>
                             <p className="text-gray-600 text-sm md:text-base lg:text-lg font-medium leading-relaxed">
-                                Discover your next career move. We are actively hiring across multiple divisions.
+                                {hasOpenings
+                                    ? "Discover your next career move. We are actively hiring across multiple divisions."
+                                    : "We are currently fully staffed, but our team is always evolving."}
                             </p>
                         </div>
                         <div className="shrink-0">
@@ -182,33 +158,48 @@ const CareersCom: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-4 mb-8">
-                        <div className="relative w-full md:w-1/3 shrink-0">
-                            <input
-                                type="text"
-                                placeholder="Search roles..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-white border border-gray-200 text-gray-900 text-sm font-medium rounded-xl pl-11 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#0437cc]/20 focus:border-[#0437cc] transition-all shadow-sm"
-                            />
-                            <svg className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                        </div>
+                    {/* Only show search and filters if there are actual jobs listed */}
+                    {hasOpenings && (
+                        <div className="flex flex-col md:flex-row gap-4 mb-8">
+                            <div className="relative w-full md:w-1/3 shrink-0">
+                                <input
+                                    type="text"
+                                    placeholder="Search roles..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full bg-white border border-gray-200 text-gray-900 text-sm font-medium rounded-xl pl-11 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#0437cc]/20 focus:border-[#0437cc] transition-all shadow-sm"
+                                />
+                                <svg className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            </div>
 
-                        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar w-full">
-                            {departments.map((dept, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => setActiveDepartment(dept)}
-                                    className={`whitespace-nowrap px-4 py-3 md:py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${activeDepartment === dept ? 'bg-[#0437cc] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200 hover:border-gray-300 hover:text-gray-900'}`}
-                                >
-                                    {dept}
-                                </button>
-                            ))}
+                            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar w-full">
+                                {departments.map((dept, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setActiveDepartment(dept)}
+                                        className={`whitespace-nowrap px-4 py-3 md:py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${activeDepartment === dept ? 'bg-[#0437cc] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200 hover:border-gray-300 hover:text-gray-900'}`}
+                                    >
+                                        {dept}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
-                    <div className="flex flex-col border-t border-gray-200 pt-2 min-h-[400px]">
-                        {filteredJobs.length > 0 ? (
+                    <div className="flex flex-col border-t border-gray-200 pt-2 min-h-[250px]">
+                        {!hasOpenings ? (
+                            // --- ZERO OPENINGS STATE ---
+                            <div className="flex flex-col items-center justify-center py-16 text-center">
+                                <div className="w-16 h-16 bg-white border border-gray-100 rounded-full flex items-center justify-center text-[#0437cc] mb-5 shadow-sm">
+                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                </div>
+                                <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-2 tracking-tight">No Current Openings</h3>
+                                <p className="text-gray-500 font-medium max-w-md mx-auto leading-relaxed">
+                                    We have successfully filled all our current roles. Please check back later or submit your resume for future opportunities.
+                                </p>
+                            </div>
+                        ) : filteredJobs.length > 0 ? (
+                            // --- RENDER FILTERED JOBS ---
                             filteredJobs.map((job) => {
                                 const isActive = activeJob === job.title;
 
@@ -259,11 +250,12 @@ const CareersCom: React.FC = () => {
                                 );
                             })
                         ) : (
+                            // --- SEARCH YIELDED NO RESULTS ---
                             <div className="flex flex-col items-center justify-center py-20 text-center">
                                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-4">
                                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H11m0 0v2m0-2V8m0 2H9" /></svg>
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">No openings found</h3>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">No matching roles found</h3>
                                 <p className="text-gray-500 font-medium">Try adjusting your search or category filter.</p>
                                 <button onClick={() => { setSearchQuery(""); setActiveDepartment("All Roles"); }} className="mt-4 text-[#0437cc] font-bold hover:underline">Clear all filters</button>
                             </div>

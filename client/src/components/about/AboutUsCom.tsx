@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Buttons from '../../common/Buttons';
-import Founders from './Founders'; 
 
 const stats = [
     {
@@ -101,8 +100,6 @@ const AboutUsCom: React.FC = () => {
                     </div>
                 </div>
             </section>
-
-            <Founders />
 
             {/* --- Stats Section --- */}
             <section className="py-16 lg:py-24 bg-[#010a1f] relative overflow-hidden border-t border-b border-white/5">
